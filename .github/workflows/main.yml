@@ -1,0 +1,84 @@
+# Workflow Name: Generate Podcast Feeds
+name: Generate Podcast Feeds
+# This is the name of the workflow. This name will appear in the Actions tab of the GitHub repository. It describes the purpose of the workflow (i.e., generating podcast feeds).
+
+# The `on` field specifies the events that will trigger the workflow to run.
+on: [push]
+# This workflow is triggered when a push event occurs to any branch in the repository.
+# 'push' event refers to any changes (e.g., commits or merges) being pushed to the repository.
+# We can specify other events like `pull_request`, `schedule`, etc., to trigger the workflow at different times.
+
+jobs:
+  # `jobs` define the different jobs that will run as part of this workflow.
+  # Each job contains a sequence of steps that are executed in order.
+  
+  build:
+    # This defines the job named `build`. A job is a set of steps that run sequentially.
+    # The `build` key defines a job called "build".
+    # A job is a collection of steps that run sequentially on a specific environment.
+    
+    runs-on: ubuntu-latest
+    # The job will run on the latest Ubuntu virtual machine (VM) hosted by GitHub. We can specify other OS environments, but `ubuntu-latest` is commonly used.
+    # `runs-on` specifies the operating system or environment in which the job will run.
+    # In this case, the job will run on a virtual machine (VM) provided by GitHub, running the latest version of Ubuntu.
+    
+    steps:
+      # `steps` is an array of individual actions or commands to execute in sequence within the job.
+      # Each step can either run a command or use an action.
+      - name: Checkout Repository
+        # The `name` field provides a human-readable description of the step.
+        # This will be displayed in the Actions tab and helps identify the purpose of the step.
+        
+        # This step uses the `actions/checkout` action to check out the repository's code to the runner.
+        # This is the first step in most workflows to ensure the code in the repository is available for subsequent steps.
+        uses: actions/checkout@v3
+        # `uses` specifies an action to run. Here, the `actions/checkout` action is used to check out the repository's code.
+        # `actions/checkout@v3` is the latest version of the action used to check out the repository.
+        # `@v3` refers to version 3 of the `actions/checkout` action, which is maintained by GitHub.
+        # This is the first step in most workflows because it allows subsequent steps to access the repository code.        
+
+      - name: Setup Python
+        # This step uses the `actions/setup-python` action to set up a specific version of Python on the runner.
+        # It ensures that the correct Python version (in this case, Python 3.10) is installed and available.
+        uses: actions/setup-python@v4
+        # The `actions/setup-python` action is used to install and configure a specified version of Python in the workflow.
+        with:
+          python-version: '3.10'
+        # `python-version: '3.10'` specifies that Python version 3.10 should be installed on the runner.
+        # `with` specifies inputs for the action. Here, the `python-version` input is set to '3.10'.
+        # This means Python 3.10 will be installed on the runner. We can specify other versions like '3.9', '3.8', etc.
+
+      - name: Install Dependencies
+        # This step installs the required Python dependencies for the workflow, such as `pyyaml` which is required for the podcast feed generator.
+
+        # The run field is used to execute custom shell commands or scripts during our workflow.
+        # Commands in the run field are executed directly in the runner’s environment, allowing us to perform necessary operations such as installing dependencies, running scripts, or interacting with Git (in this case, for committing and pushing changes).
+        # We can use multiple commands within a single run field by separating them with a pipe (|), which is useful when multiple operations need to be executed in sequence (e.g., installing packages, configuring Git, etc.).
+        run: |
+          python -m pip install --upgrade pip
+          # This command upgrades the pip package manager to the latest version.
+          pip install pyyaml
+          # This command installs the `pyyaml` package, which is a YAML parser and emitter required to parse and generate podcast feeds.
+
+      - name: Run Feed Generator
+        # This step runs the Python script `feed.py`, which is expected to generate the podcast feed (presumably from YAML data).
+        run: python feed.py
+        # The `feed.py` script is executed using the Python interpreter to generate the podcast feed, likely creating an XML file as output.
+        # The `python feed.py` command runs the Python interpreter on the `feed.py` script to execute the code and generate the necessary feed.
+
+      - name: Push Repository
+        # This step configures git, commits changes to the repository (if any), and pushes those changes back to the repository.
+        run: |
+          git config user.name "Viraj Patel"
+          # This command configures the Git user name to be used in commits. It is required for committing changes in GitHub Actions.
+          git config user.email tom007stark@gmail.com
+          # This command configures the Git email address to be used in commits.
+          # These configurations are needed for Git to record who is making the commit.
+          git add .
+          # The `git add .` command stages all changes (e.g., modified files) for commit. The dot (`.`) means "add everything."
+          git commit -m "Modified Feed"
+          # This command commits the staged changes with the message "Modified Feed."
+          # If changes were made (e.g., new feed generated), this commits those changes to the local Git repository.
+          git push
+          # This command pushes the committed changes to the remote repository (i.e., GitHub).
+          # After this step, any changes made (such as the generated podcast feed file) will be reflected in the repository.

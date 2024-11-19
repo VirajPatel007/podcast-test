@@ -37,48 +37,52 @@ jobs:
         # `@v3` refers to version 3 of the `actions/checkout` action, which is maintained by GitHub.
         # This is the first step in most workflows because it allows subsequent steps to access the repository code.        
 
-      - name: Setup Python
-        # This step uses the `actions/setup-python` action to set up a specific version of Python on the runner.
-        # It ensures that the correct Python version (in this case, Python 3.10) is installed and available.
-        uses: actions/setup-python@v4
-        # The `actions/setup-python` action is used to install and configure a specified version of Python in the workflow.
-        with:
-          python-version: '3.10'
-        # `python-version: '3.10'` specifies that Python version 3.10 should be installed on the runner.
-        # `with` specifies inputs for the action. Here, the `python-version` input is set to '3.10'.
-        # This means Python 3.10 will be installed on the runner. We can specify other versions like '3.9', '3.8', etc.
-
-      - name: Install Dependencies
-        # This step installs the required Python dependencies for the workflow, such as `pyyaml` which is required for the podcast feed generator.
-
-        # The run field is used to execute custom shell commands or scripts during our workflow.
-        # Commands in the run field are executed directly in the runner’s environment, allowing us to perform necessary operations such as installing dependencies, running scripts, or interacting with Git (in this case, for committing and pushing changes).
-        # We can use multiple commands within a single run field by separating them with a pipe (|), which is useful when multiple operations need to be executed in sequence (e.g., installing packages, configuring Git, etc.).
-        run: |
-          python -m pip install --upgrade pip
-          # This command upgrades the pip package manager to the latest version.
-          pip install pyyaml
-          # This command installs the `pyyaml` package, which is a YAML parser and emitter required to parse and generate podcast feeds.
-
       - name: Run Feed Generator
-        # This step runs the Python script `feed.py`, which is expected to generate the podcast feed (presumably from YAML data).
-        run: python feed.py
-        # The `feed.py` script is executed using the Python interpreter to generate the podcast feed, likely creating an XML file as output.
-        # The `python feed.py` command runs the Python interpreter on the `feed.py` script to execute the code and generate the necessary feed.
+        uses: VirajPatel007/podcast-generator@main
 
-      - name: Push Repository
-        # This step configures git, commits changes to the repository (if any), and pushes those changes back to the repository.
-        run: |
-          git config user.name "Viraj Patel"
-          # This command configures the Git user name to be used in commits. It is required for committing changes in GitHub Actions.
-          git config user.email tom007stark@gmail.com
-          # This command configures the Git email address to be used in commits.
-          # These configurations are needed for Git to record who is making the commit.
-          git add .
-          # The `git add .` command stages all changes (e.g., modified files) for commit. The dot (`.`) means "add everything."
-          git commit -m "Modified Feed"
-          # This command commits the staged changes with the message "Modified Feed."
-          # If changes were made (e.g., new feed generated), this commits those changes to the local Git repository.
-          git push
-          # This command pushes the committed changes to the remote repository (i.e., GitHub).
-          # After this step, any changes made (such as the generated podcast feed file) will be reflected in the repository.
+####################################################
+      # - name: Setup Python
+      #   # This step uses the `actions/setup-python` action to set up a specific version of Python on the runner.
+      #   # It ensures that the correct Python version (in this case, Python 3.10) is installed and available.
+      #   uses: actions/setup-python@v4
+      #   # The `actions/setup-python` action is used to install and configure a specified version of Python in the workflow.
+      #   with:
+      #     python-version: '3.10'
+      #   # `python-version: '3.10'` specifies that Python version 3.10 should be installed on the runner.
+      #   # `with` specifies inputs for the action. Here, the `python-version` input is set to '3.10'.
+      #   # This means Python 3.10 will be installed on the runner. We can specify other versions like '3.9', '3.8', etc.
+
+      # - name: Install Dependencies
+      #   # This step installs the required Python dependencies for the workflow, such as `pyyaml` which is required for the podcast feed generator.
+
+      #   # The run field is used to execute custom shell commands or scripts during our workflow.
+      #   # Commands in the run field are executed directly in the runner’s environment, allowing us to perform necessary operations such as installing dependencies, running scripts, or interacting with Git (in this case, for committing and pushing changes).
+      #   # We can use multiple commands within a single run field by separating them with a pipe (|), which is useful when multiple operations need to be executed in sequence (e.g., installing packages, configuring Git, etc.).
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     # This command upgrades the pip package manager to the latest version.
+      #     pip install pyyaml
+      #     # This command installs the `pyyaml` package, which is a YAML parser and emitter required to parse and generate podcast feeds.
+
+      # - name: Run Feed Generator
+      #   # This step runs the Python script `feed.py`, which is expected to generate the podcast feed (presumably from YAML data).
+      #   run: python feed.py
+      #   # The `feed.py` script is executed using the Python interpreter to generate the podcast feed, likely creating an XML file as output.
+      #   # The `python feed.py` command runs the Python interpreter on the `feed.py` script to execute the code and generate the necessary feed.
+
+      # - name: Push Repository
+      #   # This step configures git, commits changes to the repository (if any), and pushes those changes back to the repository.
+      #   run: |
+      #     git config user.name "Viraj Patel"
+      #     # This command configures the Git user name to be used in commits. It is required for committing changes in GitHub Actions.
+      #     git config user.email tom007stark@gmail.com
+      #     # This command configures the Git email address to be used in commits.
+      #     # These configurations are needed for Git to record who is making the commit.
+      #     git add .
+      #     # The `git add .` command stages all changes (e.g., modified files) for commit. The dot (`.`) means "add everything."
+      #     git commit -m "Modified Feed"
+      #     # This command commits the staged changes with the message "Modified Feed."
+      #     # If changes were made (e.g., new feed generated), this commits those changes to the local Git repository.
+      #     git push
+      #     # This command pushes the committed changes to the remote repository (i.e., GitHub).
+      #     # After this step, any changes made (such as the generated podcast feed file) will be reflected in the repository.

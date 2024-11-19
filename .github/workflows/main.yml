@@ -41,6 +41,7 @@ jobs:
         uses: VirajPatel007/podcast-generator@main
 
 ####################################################
+# Old Code
       # - name: Setup Python
       #   # This step uses the `actions/setup-python` action to set up a specific version of Python on the runner.
       #   # It ensures that the correct Python version (in this case, Python 3.10) is installed and available.

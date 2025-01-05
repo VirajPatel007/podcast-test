@@ -39,6 +39,12 @@ jobs:
 
       - name: Run Feed Generator
         uses: VirajPatel007/podcast-generator@main
+        # Provide the required inputs for our action. 
+        with:
+          # Provide the email address of the committer.
+          email: "tom007stark@gmail.com"
+          # Provide the name of the committer.
+          name: "VirajPatel007"
 
 ####################################################
 # Old Code
